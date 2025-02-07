@@ -3,7 +3,7 @@ import sys
 import time
 
 # Constants
-MAX_CAPACITY = 4
+MAX_CAPACITY = 6
 BALL_RADIUS = 20
 TUBE_SPACING = 80
 MOVE_SPEED = 10
@@ -12,7 +12,7 @@ ANIMATION_DELAY = 0.02
 COLORS = [
     (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 165, 0),
     (128, 0, 128), (0, 255, 255), (255, 192, 203), (165, 42, 42), (0, 128, 0),
-    (75, 0, 130), (0, 0, 0), (192, 192, 192), (255, 20, 147), (255, 69, 0),
+    (75, 0, 130), (60, 255, 255), (192, 192, 192), (255, 20, 147), (255, 69, 0),
     (60, 179, 113), (30, 144, 255), (218, 112, 214), (0, 255, 127), (139, 69, 19)
 ]
 
@@ -27,7 +27,7 @@ class Tube:
         self.x = x
         self.y = y
         self.width = 60
-        self.height = 4 * 2 * BALL_RADIUS
+        self.height = MAX_CAPACITY * 2 * BALL_RADIUS
         self.balls = [Ball(color) for color in balls]
 
     def draw(self, screen):
@@ -68,8 +68,16 @@ class BallSortGame:
             time.sleep(ANIMATION_DELAY)
 
     def move_ball(self, from_tube, to_tube):
-        if not self.selected_ball or len(to_tube.balls) >= 4:
+        if not self.selected_ball or len(to_tube.balls) >= MAX_CAPACITY:
+            self.move_ball(None, from_tube)
             return
+        
+        if from_tube != to_tube:
+            if to_tube.balls:
+                if self.selected_ball.color != to_tube.balls[-1].color:
+                    self.move_ball(from_tube, from_tube)
+                    return
+
         
         target_x = to_tube.x + to_tube.width // 2
         target_y = to_tube.y + to_tube.height - len(to_tube.balls) * 40 - BALL_RADIUS
@@ -83,7 +91,6 @@ class BallSortGame:
             self.selected_ball.y += MOVE_SPEED
             self.draw()
             time.sleep(ANIMATION_DELAY)
-
         to_tube.balls.append(self.selected_ball)
         self.selected_ball = None  
 
@@ -115,11 +122,14 @@ class BallSortGame:
                 break
 
     def run(self):
+        i = 0
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
+                    print(i)
+                    i += 1
                     self.handle_click(*event.pos)
             self.draw()
             if self.check_win():
@@ -130,10 +140,10 @@ class BallSortGame:
 
 
 tube_data = [
-    [COLORS[0], COLORS[0], COLORS[0], COLORS[0]],
-    [COLORS[1], COLORS[1], COLORS[1], COLORS[2]],
-    [COLORS[2], COLORS[2], COLORS[2], COLORS[1]],
-    []
+    [COLORS[10], COLORS[11], COLORS[1], COLORS[2]],
+    [COLORS[1], COLORS[2], COLORS[1], COLORS[2]],
+    [COLORS[2], COLORS[2], COLORS[15], COLORS[10]],
+    [], [COLORS[15], COLORS[8]], [], [COLORS[15], COLORS[1], COLORS[8]], [], [COLORS[15]]
 ]
 
 game = BallSortGame(tube_data)
