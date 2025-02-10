@@ -1,1 +1,4 @@
 pygame
+ortools
+sqlite3
+ast
