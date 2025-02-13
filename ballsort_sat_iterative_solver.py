@@ -274,8 +274,8 @@ class StateGraphDB:
 
 class CPPathSolver:
     """
-    Uses OR‑Tools CP‑SAT to select a valid sequence of states over time.
-    This version builds a mapping between the database’s state IDs and a dense
+    Uses OR-Tools CP-SAT to select a valid sequence of states over time.
+    This version builds a mapping between the database's state IDs and a dense
     range of indices [0, num_states-1] used for the CP model.
     """
     def __init__(self, graph_db: StateGraphDB, horizon: int):
@@ -488,15 +488,19 @@ if __name__ == "__main__":
     # }
 
     raw_tube_data = [
-        [1, 2, 3, 3],
-        [3, 1, 2],
-        [2, 3, 1],
+        [1, 2, 5, 3, 3],
+        [3, 1, 2, 5, 4],
+        [5, 4, 2, 3, 1],
+        [4, 1, 3, 5],
+        [],
         []
     ]
     color_mapping = {
         1: (255, 0, 0),    # red
         2: (0, 255, 0),    # green
-        3: (0, 0, 255)     # blue
+        3: (0, 0, 255),     # blue
+        4: (255, 255, 0),
+        5: (0, 255, 255)
     }
 
     # Create the puzzle instance.

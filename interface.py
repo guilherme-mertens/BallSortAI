@@ -1,20 +1,42 @@
 import pygame
 import sys
 import time
+from utils import parse_ball_sort_file
 
 # Constants
-MAX_CAPACITY = 6
 BALL_RADIUS = 20
 TUBE_SPACING = 80
 MOVE_SPEED = 10
-ANIMATION_DELAY = 0.02
+ANIMATION_DELAY = 0.01
 
-COLORS = [
-    (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 165, 0),
-    (128, 0, 128), (0, 255, 255), (255, 192, 203), (165, 42, 42), (0, 128, 0),
-    (75, 0, 130), (60, 255, 255), (192, 192, 192), (255, 20, 147), (255, 69, 0),
-    (60, 179, 113), (30, 144, 255), (218, 112, 214), (0, 255, 127), (139, 69, 19)
-]
+COLORS = {
+        1: (255, 0, 0),    # Red
+        2: (0, 255, 0),    # Green
+        3: (0, 0, 255),    # Blue
+        4: (255, 255, 0),  # Yellow
+        5: (255, 165, 0),  # Orange
+        6: (128, 0, 128),  # Purple
+        7: (0, 255, 255),  # Cyan
+        8: (255, 192, 203),# Pink
+        9: (165, 42, 42),  # Brown
+        10: (0, 128, 0),    # Dark Green
+        11: (75, 0, 130),   # Indigo
+        12: (60, 255, 255), # Light Cyan
+        13: (192, 192, 192),# Silver
+        14: (255, 20, 147), # Deep Pink
+        15: (255, 69, 0),   # Red-Orange
+        16: (60, 179, 113), # Medium Sea Green
+        17: (30, 144, 255), # Dodger Blue
+        18: (218, 112, 214),# Orchid
+        19: (0, 255, 127),  # Spring Green
+        20: (139, 69, 19),   # Saddle Brown
+        21: (10, 50, 120),
+        22: (100, 0, 255),
+        23: (25, 30, 80),
+        24: (0, 150, 127),
+        25: (139, 355, 19),
+        26: (10, 10, 255)
+}
 
 class Ball:
     def __init__(self, color):
@@ -28,7 +50,7 @@ class Tube:
         self.y = y
         self.width = 60
         self.height = MAX_CAPACITY * 2 * BALL_RADIUS
-        self.balls = [Ball(color) for color in balls]
+        self.balls = [Ball(COLORS[color]) for color in balls]
 
     def draw(self, screen):
         pygame.draw.rect(screen, (255, 255, 255), (self.x, self.y, self.width, self.height), 2)
@@ -139,12 +161,10 @@ class BallSortGame:
         sys.exit()
 
 
-tube_data = [
-    [COLORS[10], COLORS[11], COLORS[1], COLORS[2]],
-    [COLORS[1], COLORS[2], COLORS[1], COLORS[2]],
-    [COLORS[2], COLORS[2], COLORS[15], COLORS[10]],
-    [], [COLORS[15], COLORS[8]], [], [COLORS[15], COLORS[1], COLORS[8]], [], [COLORS[15]]
-]
+file_path = r"tests/L7.txt"
+raw_tube_data = parse_ball_sort_file(file_path)
+MAX_CAPACITY = max([len(x) for x in raw_tube_data])
 
-game = BallSortGame(tube_data)
+
+game = BallSortGame(raw_tube_data)
 game.run()
